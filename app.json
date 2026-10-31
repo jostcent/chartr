@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "Chartr",
+    "slug": "chartr",
+    "version": "1.0.0",
+    "owner": "nursedev2026",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "backgroundColor": "#1a4a6e"
+    },
+    "android": {
+      "package": "com.nursedev2026.chartr",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1a4a6e"
+      },
+      "permissions": [
+        "RECORD_AUDIO",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "plugins": [
+      "expo-secure-store"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "3c46e950-d566-4dd7-a162-ae729cf35448"
+      }
+    }
+  }
+}
