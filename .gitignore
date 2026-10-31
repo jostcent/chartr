@@ -1,3 +1,4 @@
+# App
 node_modules/
 .expo/
 dist/
@@ -11,3 +12,26 @@ npm-debug.*
 *.orig.*
 .env
 .env.local
+
+# Pipeline: Konfiguration und Daten nie veröffentlichen
+pipeline/config.json
+klienten.json
+__pycache__/
+*.log
+*.csv
+*.tmp
+*.docx
+*.pdf
+AUDIO_ROH/
+AUDIO_TRANSKRIPT/
+*.m4a
+*.wav
+*.mp3
+*.ogg
+*.flac
+*.aac
+*.mp4
+
+# Textdateien sind meist Daten. Erlaubt sind nur die Prompts.
+*.txt
+!pipeline/prompts/*.txt

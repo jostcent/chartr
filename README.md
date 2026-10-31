@@ -11,15 +11,23 @@ Gebaut von Jost Centeno Castro, Pflegefachmann HF Psychiatrie und Experte Intens
 - **Inbox:** zeigt fertige Transkripte aus der Nextcloud an.
 - **Zeiteinträge:** Einsätze von Hand nachtragen, mit Datum.
 
-## Was sie nicht macht
+## Die lokale Pipeline dazu
 
-- Sie transkribiert nicht und schreibt keine Berichte. Das erledigt eine **separate, lokale** Pipeline auf einem eigenen Rechner (Whisper, lokales Sprachmodell). Sie ist nicht Teil dieses Repositorys.
+Im Ordner [`pipeline/`](pipeline/) liegt die Verarbeitung auf dem eigenen Rechner: Transkription mit Whisper, ein Schreibtisch für geschriebene Notizen und Berichtsentwürfe über ein lokales Sprachmodell in LM Studio. Nach der Einrichtung braucht nichts davon das Internet. Details in [`pipeline/README.md`](pipeline/README.md).
+
+## Was die App nicht macht
+
+- Sie transkribiert nicht und schreibt keine Berichte. Das erledigt die Pipeline auf dem eigenen Rechner.
 - Sie schickt nichts an Dritte. Es gibt keine Cloud ausser der eigenen Nextcloud, kein Tracking und keine Werbung.
 - Sie rechnet nicht ab und ersetzt keine Spitex-Fachanwendung.
 
 ## Datenschutz
 
-Die Klientenliste steht **nicht** im Code. Die App lädt sie zur Laufzeit aus der eigenen Nextcloud. Zugangsdaten liegen verschlüsselt im SecureStore des Geräts.
+- Die Klientenliste steht **nicht** im Code. Die App lädt sie zur Laufzeit aus der eigenen Nextcloud.
+- Zugangsdaten liegen verschlüsselt im SecureStore des Geräts. Verbindungen ohne HTTPS lehnt die App ab.
+- Eine Aufnahme wird nach dem erfolgreichen Hochladen **vom Handy gelöscht**. Sie bleibt nur liegen, wenn das Hochladen fehlgeschlagen ist, für «Erneut hochladen».
+- Die App ist von der **automatischen Android-Sicherung ausgeschlossen**. Sonst landeten Aufnahmen und Klientenliste in der Google-Cloud.
+- Sie verlangt nur die Berechtigung für das Mikrofon, keinen Zugriff auf den Speicher.
 
 Wer die App für Gesundheitsdaten nutzt, ist selbst verantwortlich für Server, Verschlüsselung, Berufsgeheimnis und Datenschutz.
 

@@ -1,0 +1,22 @@
+{
+  "_hinweis": "Kopieren als config.json und die Pfade anpassen. config.json wird nie veröffentlicht.",
+  "audio_eingang": "C:\\Pfad\\zu\\Nextcloud\\AUDIO_ROH",
+  "transkript_wurzel": "C:\\Pfad\\zu\\Nextcloud\\AUDIO_TRANSKRIPT",
+  "klienten_json": "C:\\Pfad\\zu\\Nextcloud\\klienten.json",
+  "audio_aufbewahrung_tage": 14,
+  "whisper": {
+    "modell": "large-v3-turbo",
+    "ersatzmodell": "large-v3",
+    "geraet": "cpu",
+    "rechenart": "int8",
+    "sprache": "de",
+    "intervall_sekunden": 30
+  },
+  "lm_studio": {
+    "url": "http://localhost:1234/v1/chat/completions",
+    "modell": "qwen2.5-7b-instruct-1m",
+    "temperatur": 0.3,
+    "max_tokens": 1500
+  },
+  "schreibtisch_port": 8765
+}

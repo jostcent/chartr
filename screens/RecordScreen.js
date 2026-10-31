@@ -189,7 +189,9 @@ export default function RecordScreen() {
           ));
           setSavedRecordings((raw.savedRecordings || []).map((r) =>
             r.uploading ? { ...r, uploading: false, uploadError: true } : r
-          ));
+          ).slice(0, 50));
+          // Aufräumen aus älteren Versionen: bereits hochgeladene Aufnahmen liegen noch auf dem Handy.
+          (raw.savedRecordings || []).filter((r) => r.uploaded && r.path).forEach((r) => loescheNachUpload(r.path));
         }
       } catch (_) {}
       setHydrated(true);
@@ -383,6 +385,11 @@ export default function RecordScreen() {
     }
   };
 
+  // Nach erfolgreichem Upload liegt die Aufnahme in der eigenen Nextcloud. Auf dem Handy wird sie
+  // gelöscht, damit sich dort keine Gesundheitsdaten ansammeln. Behalten wird sie nur bei Fehlern,
+  // für "Erneut hochladen".
+  const loescheNachUpload = (path) => FileSystem.deleteAsync(path, { idempotent: true }).catch(() => {});
+
   const retryRecordingUpload = async (rec) => {
     if (rec.uploading) return;
     setSavedRecordings((prev) =>
@@ -390,6 +397,7 @@ export default function RecordScreen() {
     );
     try {
       await uploadToNextcloud(rec.path, rec.filename);
+      await loescheNachUpload(rec.path);
       setSavedRecordings((prev) =>
         prev.map((r) => (r.filename === rec.filename ? { ...r, uploading: false, uploaded: true, uploadError: false } : r))
       );
@@ -441,12 +449,13 @@ export default function RecordScreen() {
       setSavedRecordings((prev) => [
         { filename, path: dest, klient: selectedKlient, duration: recordingDuration, uploading: true },
         ...prev,
-      ]);
+      ].slice(0, 50));
       recordingRef.current = null;
       setIsRecording(false);
 
       try {
         await uploadToNextcloud(dest, filename);
+        await loescheNachUpload(dest);
         setSavedRecordings((prev) =>
           prev.map((r) => r.filename === filename ? { ...r, uploading: false, uploaded: true } : r)
         );
