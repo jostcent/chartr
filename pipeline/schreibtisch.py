@@ -39,7 +39,7 @@ p.m{{padding:10px 14px;background:#f5f3ef;border-left:6px solid {farbe}}}</style
 <label>Datum<input type="date" name="datum" value="{heute}" required></label>
 <label>Beginn<input type="time" name="beginn" required></label>
 <label>Minuten gesamt<input type="number" name="minuten" min="1" max="{maxmin}" required></label></div>
-<label>Text<textarea name="text" minlength="{minz}" required></textarea></label>
+<label>Text<textarea name="text" minlength="{minz}" required spellcheck="true" data-lt-active="false" data-gramm="false"></textarea></label>
 <label><input type="checkbox" name="fertig" required style="width:auto"> Der Text ist fertig und darf verarbeitet werden.</label>
 <button>Speichern</button></form></html>"""
 

@@ -45,6 +45,7 @@ Browser, nur 127.0.0.1 ─────────schreibtisch.py─────
 - **Die Nextcloud gehört Ihnen** oder einem Anbieter mit Vertrag zur Auftragsbearbeitung, und sie läuft über HTTPS. Aufnahmen und Transkripte liegen dort mit.
 - **LM Studio:** In den Servereinstellungen «Im lokalen Netzwerk bereitstellen» **ausgeschaltet** lassen. LM Studio ist kein freies Programm. Prüfen Sie dessen Datenschutzbestimmungen und die Lizenz des Modells.
 - **Einmaliger Download:** Beim ersten Start lädt faster-whisper das Modell von Hugging Face. Dabei wird keine Aufnahme übertragen. `windows/start_transkription.bat` verhindert danach jeden weiteren Kontakt (`HF_HUB_OFFLINE=1`).
+- **Browser-Erweiterungen:** Der Schreibtisch läuft nur auf `127.0.0.1`, aber im normalen Browser. Erweiterungen für Rechtschreibung, Grammatik oder Übersetzung (zum Beispiel LanguageTool, Grammarly, DeepL) lesen Textfelder mit, und viele schicken den Text zur Prüfung an ihre Server. Das Schreibfeld trägt die Ausschluss-Attribute, doch kein Browser garantiert, dass sich jede Erweiterung daran hält. Schalten Sie solche Erweiterungen für `127.0.0.1` aus oder nutzen Sie ein eigenes Browserprofil ohne Erweiterungen. Die eingebaute Rechtschreibprüfung des Browsers arbeitet lokal und kann bleiben.
 - **Datensicherungen** des Rechners enthalten Gesundheitsdaten. Sie gehören verschlüsselt und nicht in eine fremde Cloud.
 
 ## Installation (Windows)
