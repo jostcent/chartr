@@ -51,7 +51,7 @@ Browser, nur 127.0.0.1 ─────────schreibtisch.py─────
 ## Installation (Windows)
 
 1. Python 3.11 installieren, dann `pip install faster-whisper`.
-2. [LM Studio](https://lmstudio.ai) installieren und ein Modell laden, zum Beispiel `qwen2.5-7b-instruct-1m`.
+2. [LM Studio](https://lmstudio.ai) installieren und ein Modell laden, zum Beispiel `qwen2.5-7b-instruct-1m` (genügsam, läuft auf den meisten Rechnern) oder, mit mehr Arbeitsspeicher, `qwen3-14b` (in meinem eigenen Betrieb seit 18.11.2026, 31 GB RAM, kein NVIDIA).
 3. `config.example.json` nach `config.json` kopieren und die Pfade eintragen.
 4. `klienten.example.json` an den in `config.json` genannten Ort kopieren, als `klienten.json`, und die eigenen Codes und Kürzel eintragen.
 5. Einmal `python transkribieren.py` von Hand starten. Das Modell wird geladen. Danach mit Strg+C beenden.
