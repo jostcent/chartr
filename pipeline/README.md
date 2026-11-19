@@ -9,7 +9,7 @@ Sie ist eine bereinigte Neufassung der Pipeline aus meiner Praxis. Die Erfahrung
 ```
 Handy (CHARTR) ──HTTPS/WebDAV──▶ eigene Nextcloud ──Synchronisation──▶ eigener Rechner
 
-AUDIO_ROH/<Code>/aufnahme.m4a ──transkribieren.py (Whisper)──▶ AUDIO_TRANSKRIPT/<Code>/aufnahme.txt
+AUDIO_ROH/<Code>_<Datum>_<Von>_<Bis>.m4a ──transkribieren.py (Whisper, Code aus Dateiname)──▶ AUDIO_TRANSKRIPT/<Code>/<Code>_<Datum>_<Von>_<Bis>.txt
 Browser, nur 127.0.0.1 ─────────schreibtisch.py─────────────▶ AUDIO_TRANSKRIPT/<Code>/<Code>_<Datum>_<Beginn>_<Minuten>min.txt
                                                                            │
                                   bericht_batch.py (LM Studio auf diesem Rechner, alle 30 Minuten)
@@ -20,7 +20,7 @@ Browser, nur 127.0.0.1 ─────────schreibtisch.py─────
 
 | Datei | Aufgabe |
 |---|---|
-| `transkribieren.py` | Transkribiert neue Aufnahmen mit [faster-whisper](https://github.com/SYSTRAN/faster-whisper) und löscht verarbeitete Aufnahmen nach der eingestellten Frist |
+| `transkribieren.py` | Transkribiert neue Aufnahmen mit [faster-whisper](https://github.com/SYSTRAN/faster-whisper), legt sie anhand des Codes im Dateinamen im passenden Klienten-Ordner ab und löscht verarbeitete Aufnahmen nach der eingestellten Frist |
 | `schreibtisch.py` | Eingabeseite im Browser für geschriebene statt diktierte Notizen |
 | `bericht_batch.py` | Erzeugt Berichtsentwürfe, mit `--planung` Entwürfe für Pflegeplanungen |
 | `gemeinsam.py` | Konfiguration, Klientenliste, Anfrage an LM Studio |
@@ -32,7 +32,7 @@ Browser, nur 127.0.0.1 ─────────schreibtisch.py─────
 - **Nur dieser Rechner.** `lm_studio.url` muss auf `localhost`, `127.0.0.1` oder `::1` zeigen, sonst bricht jeder Lauf ab. Proxy-Einstellungen des Systems werden ignoriert.
 - **Schreibtisch nur lokal.** Er lauscht nur auf `127.0.0.1`. Er weist fremde Hostnamen ab (Schutz vor DNS-Rebinding) und Formulare ohne geheimen Schlüssel (Schutz vor fremden Webseiten). Er erlaubt keine Einbettung und keine Zwischenspeicherung im Browser.
 - **Codes statt Namen.** Ordner heissen nach einem Code (`XY1`). Die Zuordnung zum Kürzel steht in `klienten.json`, nicht im Code. Die Kürzel erscheinen weder auf dem Schreibtisch noch im Protokoll.
-- **Unbekannter Code ergibt keinen Bericht.** Es gibt keinen Ersatzwert.
+- **Unbekannter Code ergibt weder Transkript noch Bericht.** Es gibt keinen Ersatzwert.
 - **Nichts erfinden.** Der Prompt verbietet Ergänzungen. Weil ein Prompt keine Garantie ist, heisst ein Entwurf, der deutlich länger ist als seine Quelle, `…_PRUEFEN.txt`.
 - **Keine Bruchstücke.** Quellen unter 20 Zeichen bleiben liegen. Dateien werden erst vollständig geschrieben und dann umbenannt.
 - **Nichts geht verloren.** Gleichnamige Aufnahmen überschreiben kein bestehendes Transkript. Es läuft immer nur eine Transkription gleichzeitig.
