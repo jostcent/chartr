@@ -1,10 +1,11 @@
 """Überwacht den Eingangsordner und transkribiert neue Aufnahmen lokal mit Whisper (pip install faster-whisper).
 
-audio_eingang/<Code>/aufnahme.m4a  ->  transkript_wurzel/<Code>/aufnahme.txt
+audio_eingang/<Code>_<Datum>_<Von>_<Bis>.m4a  ->  transkript_wurzel/<Code>/<Code>_<Datum>_<Von>_<Bis>.txt
 
-Verarbeitete Aufnahmen wandern nach audio_eingang/_verarbeitet und werden nach "audio_aufbewahrung_tage"
-gelöscht. Beim ersten Start lädt faster-whisper das Modell einmalig aus dem Internet (Hugging Face).
-Dabei wird keine Aufnahme übertragen. Danach läuft alles offline.
+Der Code steht am Anfang des Dateinamens, vor dem ersten "_" (so wie CHARTR und schreibtisch.py ihn
+vergeben). Verarbeitete Aufnahmen wandern nach audio_eingang/_verarbeitet und werden nach
+"audio_aufbewahrung_tage" gelöscht. Beim ersten Start lädt faster-whisper das Modell einmalig aus dem
+Internet (Hugging Face). Dabei wird keine Aufnahme übertragen. Danach läuft alles offline.
 """
 import shutil
 import socket
@@ -13,7 +14,7 @@ import time
 from datetime import datetime
 from pathlib import Path
 
-from gemeinsam import HIER, lade_config
+from gemeinsam import HIER, lade_config, lade_klienten
 
 AUDIO = {".m4a", ".wav", ".mp3", ".ogg", ".flac", ".aac", ".mp4"}
 
@@ -43,9 +44,13 @@ def stabil(datei: Path) -> bool:
         return False
 
 
-def transkribiere(modell, w: dict, audio: Path, eingang: Path, wurzel: Path):
-    rel = audio.relative_to(eingang)
-    ziel, n = (wurzel / rel).with_suffix(".txt"), 2
+def transkribiere(modell, w: dict, audio: Path, eingang: Path, wurzel: Path, codes: set):
+    code = audio.stem.split("_", 1)[0]
+    if code not in codes:  # kein Ersatzwert: lieber liegen lassen als falsch zuordnen
+        log(f"Unbekannter Code bei {audio.name}, nicht verarbeitet.")
+        return
+    quelle_rel = audio.relative_to(eingang)
+    ziel, n = (wurzel / code / audio.name).with_suffix(".txt"), 2
     while ziel.exists():  # gleicher Name, neue Aufnahme: nichts überschreiben, nichts verlieren
         ziel, n = ziel.with_name(f"{audio.stem}_{n}.txt"), n + 1
     segmente, _ = modell.transcribe(str(audio), language=w.get("sprache", "de"), beam_size=5,
@@ -55,11 +60,11 @@ def transkribiere(modell, w: dict, audio: Path, eingang: Path, wurzel: Path):
     tmp = ziel.with_suffix(".tmp")
     tmp.write_text(text + "\n", encoding="utf-8")
     tmp.replace(ziel)  # erst ganz schreiben, dann umbenennen: der Bericht-Lauf sieht nie eine halbe Datei
-    archiv = eingang / "_verarbeitet" / rel
+    archiv = eingang / "_verarbeitet" / quelle_rel
     archiv.parent.mkdir(parents=True, exist_ok=True)
     shutil.move(str(audio), str(archiv))
     archiv.touch()  # Aufbewahrungsfrist ab heute, nicht ab Aufnahmedatum
-    log(f"{rel} -> {ziel.name} ({len(text)} Zeichen)")
+    log(f"{quelle_rel} -> {code}/{ziel.name} ({len(text)} Zeichen)")
 
 
 def aufraeumen(eingang: Path, tage: float):
@@ -76,6 +81,7 @@ def main():
     except OSError:
         sys.exit("Die Transkription läuft bereits.")
     cfg = lade_config()
+    codes = set(lade_klienten(cfg))
     w = cfg["whisper"]
     eingang, wurzel = Path(cfg["audio_eingang"]), Path(cfg["transkript_wurzel"])
     modell = lade_modell(w)
@@ -84,7 +90,7 @@ def main():
         for audio in [p for p in eingang.rglob("*") if p.suffix.lower() in AUDIO and "_verarbeitet" not in p.parts]:
             if stabil(audio):
                 try:
-                    transkribiere(modell, w, audio, eingang, wurzel)
+                    transkribiere(modell, w, audio, eingang, wurzel, codes)
                 except Exception as exc:
                     log(f"Fehler bei {audio.name}: {exc}")
         aufraeumen(eingang, cfg.get("audio_aufbewahrung_tage", 14))
